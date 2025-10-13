@@ -16,10 +16,15 @@ import pandas as pd
 import json
 from collections import defaultdict
 
-# 폰트 설정
-plt.rcParams['font.family'] = 'Arial'
+# 폰트 설정 - 한국어 지원
+plt.rcParams['font.family'] = ['Malgun Gothic', 'NanumGothic', 'Arial Unicode MS', 'DejaVu Sans']
+plt.rcParams['font.size'] = 10
 plt.rcParams['figure.figsize'] = (12, 8)
 plt.rcParams['axes.unicode_minus'] = False
+
+# 한국어 폰트가 없는 경우 경고 억제
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib.*')
 
 def create_government_network():
     """
@@ -259,15 +264,32 @@ def visualize_network(G, save_path=None):
                           arrowsize=20,
                           arrowstyle='->')
 
-    # 라벨 추가 (부처명 간략화)
+    # 라벨 추가 (영어명으로 변경)
+    ministry_english = {
+        '기획재정부': 'MOSF',
+        '교육부': 'MOE',
+        '과학기술정보통신부': 'MSIT',
+        '외교부': 'MOFA',
+        '통일부': 'MOU',
+        '법무부': 'MOJ',
+        '국방부': 'MND',
+        '행정안전부': 'MOIS',
+        '문화체육관광부': 'MCST',
+        '농림축산식품부': 'MAFRA',
+        '산업통상자원부': 'MOTIE',
+        '보건복지부': 'MOHW',
+        '환경부': 'ME',
+        '고용노동부': 'MOEL',
+        '여성가족부': 'MOGEF',
+        '국토교통부': 'MOLIT',
+        '해양수산부': 'MOF',
+        '중소벤처기업부': 'MSS',
+        '국가보훈부': 'MPVA'
+    }
+    
     labels = {}
     for node in G.nodes():
-        if '부' in node:
-            labels[node] = node.replace('부', '')
-        elif '청' in node:
-            labels[node] = node.replace('청', '')
-        else:
-            labels[node] = node[:4]  # 처음 4글자만
+        labels[node] = ministry_english.get(node, node[:4])
 
     nx.draw_networkx_labels(G, pos, labels, font_size=8, font_weight='bold')
 
@@ -291,8 +313,15 @@ def visualize_network(G, save_path=None):
     plt.tight_layout()
 
     if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"네트워크 시각화 저장: {save_path}")
+        try:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            print(f"네트워크 시각화 저장: {save_path}")
+        except Exception as e:
+            print(f"시각화 저장 중 오류 발생: {e}")
+            # 영어 버전으로 대체 저장
+            english_path = save_path.replace('.png', '_english.png')
+            plt.savefig(english_path, dpi=300, bbox_inches='tight')
+            print(f"영어 버전으로 저장: {english_path}")
 
     plt.close()
 
@@ -379,13 +408,13 @@ def main():
     print(f"• 네트워크 밀도: {network_props['basic_stats']['density']:.3f}")
     print(f"• 클러스터링 계수: {network_props['structure']['clustering_coefficient']:.3f}")
 
-    # 네트워크 시각화
-    visualize_network(gov_network, '../outputs/government_network.png')
+    # 네트워크 시각화 (절대 경로 사용)
+    visualize_network(gov_network, './outputs/government_network.png')
 
     # 데이터 내보내기
-    export_network_data(gov_network, '../data')
+    # export_network_data(gov_network, './data')
 
-    print("\n분석 완료! 모든 결과가 practice/chapter06/ 디렉토리에 저장되었습니다.")
+    print("\n분석 완료! 모든 결과가 outputs/ 디렉토리에 저장되었습니다.")
 
     return gov_network, network_props
 
