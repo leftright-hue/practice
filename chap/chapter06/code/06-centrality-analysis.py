@@ -17,10 +17,32 @@ from scipy.stats import pearsonr, spearmanr
 import warnings
 warnings.filterwarnings('ignore')
 
-# 한글 폰트 설정
-plt.rcParams['font.family'] = 'Arial Unicode MS'
+# 한글 폰트 설정 - Windows 환경에 맞게 수정
+import platform
+import matplotlib.font_manager as fm
+
+# 운영체제별 폰트 설정
+if platform.system() == 'Windows':
+    # Windows에서 사용 가능한 한글 폰트 찾기
+    font_list = [font.name for font in fm.fontManager.ttflist]
+    korean_fonts = ['Malgun Gothic', 'NanumGothic', 'Gulim', 'Dotum', 'Batang']
+    
+    for font in korean_fonts:
+        if font in font_list:
+            plt.rcParams['font.family'] = font
+            break
+    else:
+        # 한글 폰트가 없으면 영어로 표시하고 경고 메시지 출력
+        plt.rcParams['font.family'] = 'DejaVu Sans'
+        print("⚠️ 한글 폰트를 찾을 수 없어 영어로 표시됩니다.")
+else:
+    plt.rcParams['font.family'] = ['NanumGothic', 'AppleGothic', 'DejaVu Sans']
+
 plt.rcParams['figure.figsize'] = (12, 8)
 plt.rcParams['axes.unicode_minus'] = False
+
+# 한글 폰트 문제 경고 숨기기
+warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib.*')
 
 def calculate_all_centralities(G):
     """
@@ -272,8 +294,8 @@ def create_centrality_visualizations(df, correlation_matrix, save_path=None):
     bars = ax1.barh(range(len(top_10)), top_10['influence_score'], color='steelblue')
     ax1.set_yticks(range(len(top_10)))
     ax1.set_yticklabels([name.replace('부', '').replace('청', '') for name in top_10['ministry']])
-    ax1.set_xlabel('종합 영향력 점수')
-    ax1.set_title('정부 부처 종합 정책 영향력 순위 (상위 10개)', fontweight='bold')
+    ax1.set_xlabel('Total Influence Score')
+    ax1.set_title('Top 10 Government Ministries by Policy Influence', fontweight='bold')
     ax1.grid(axis='x', alpha=0.3)
 
     # 값 표시
@@ -295,10 +317,10 @@ def create_centrality_visualizations(df, correlation_matrix, save_path=None):
                     (row['betweenness'], row['eigenvector']),
                     xytext=(5, 5), textcoords='offset points', fontsize=9)
 
-    ax2.set_xlabel('매개 중심성')
-    ax2.set_ylabel('고유벡터 중심성')
-    ax2.set_title('중심성 지표 관계 분석\n(점 크기: 연결 중심성, 색상: 영향력 점수)', fontweight='bold')
-    plt.colorbar(scatter, ax=ax2, label='영향력 점수')
+    ax2.set_xlabel('Betweenness Centrality')
+    ax2.set_ylabel('Eigenvector Centrality')
+    ax2.set_title('Centrality Metrics Relationship\n(Size: Degree, Color: Influence Score)', fontweight='bold')
+    plt.colorbar(scatter, ax=ax2, label='Influence Score')
 
     # 3. 상관계수 히트맵
     ax3 = axes[1, 0]
@@ -308,7 +330,7 @@ def create_centrality_visualizations(df, correlation_matrix, save_path=None):
 
     sns.heatmap(corr_subset, annot=True, cmap='RdBu_r', center=0,
                 square=True, ax=ax3, cbar_kws={'shrink': 0.8})
-    ax3.set_title('중심성 지표 간 상관관계', fontweight='bold')
+    ax3.set_title('Centrality Metrics Correlation', fontweight='bold')
 
     # 4. 협업 프로젝트 vs 중심성
     ax4 = axes[1, 1]
@@ -327,9 +349,9 @@ def create_centrality_visualizations(df, correlation_matrix, save_path=None):
                     (ministry_collab, row['influence_score']),
                     xytext=(5, 5), textcoords='offset points', fontsize=9)
 
-    ax4.set_xlabel('총 협업 강도')
-    ax4.set_ylabel('종합 영향력 점수')
-    ax4.set_title('협업 강도 vs 정책 영향력', fontweight='bold')
+    ax4.set_xlabel('Total Collaboration Intensity')
+    ax4.set_ylabel('Total Influence Score')
+    ax4.set_title('Collaboration Intensity vs Policy Influence', fontweight='bold')
     ax4.grid(alpha=0.3)
 
     plt.tight_layout()
@@ -356,7 +378,7 @@ def create_radar_chart(df, save_path=None):
 
     # 레이더 차트용 지표들
     radar_cols = ['degree', 'closeness', 'betweenness', 'eigenvector', 'weighted_in_degree']
-    radar_labels = ['연결성', '근접성', '매개성', '지위성', '협업강도']
+    radar_labels = ['Connectivity', 'Closeness', 'Betweenness', 'Status', 'Collaboration']
 
     # 각 지표를 0-1로 정규화
     normalized_data = {}
@@ -393,7 +415,7 @@ def create_radar_chart(df, save_path=None):
     ax.grid(True)
 
     plt.legend(loc='upper right', bbox_to_anchor=(1.3, 1.0))
-    plt.title('주요 부처별 다차원 중심성 분석\n(정규화된 값)',
+    plt.title('Multi-dimensional Centrality Analysis by Key Ministries\n(Normalized Values)',
               fontweight='bold', pad=30)
 
     if save_path:

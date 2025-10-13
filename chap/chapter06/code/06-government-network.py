@@ -323,6 +323,8 @@ def visualize_network(G, save_path=None):
             plt.savefig(english_path, dpi=300, bbox_inches='tight')
             print(f"영어 버전으로 저장: {english_path}")
 
+    # 이미지 표시
+    plt.show()
     plt.close()
 
 def export_network_data(G, base_path):
