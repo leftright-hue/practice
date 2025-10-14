@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 제6장 그래프 이론과 정책 네트워크 분석
@@ -7,6 +6,30 @@
 한국 정부 19개 부처 간의 협업 네트워크를 모델링하고 기본 속성을 분석합니다.
 실제 정부 부처 간 협업 사례를 기반으로 네트워크 분석 방법론을 시연합니다.
 """
+
+# 한글 출력 인코딩 문제 해결 (Windows 환경)
+import sys
+import os
+
+# Windows 콘솔 코드페이지를 UTF-8로 설정
+if sys.platform == "win32":
+    try:
+        os.system("chcp 65001 > nul")
+    except:
+        pass
+
+# Python UTF-8 모드 강제 활성화
+os.environ['PYTHONUTF8'] = '1'
+
+# stdout/stderr 인코딩을 UTF-8로 재구성
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+else:
+    # 구 버전 Python 호환성
+    import codecs
+    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+    sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach())
 
 import networkx as nx
 import numpy as np
@@ -17,9 +40,35 @@ import json
 from collections import defaultdict
 
 # 폰트 설정
-plt.rcParams['font.family'] = 'Arial'
+import matplotlib
+matplotlib.use('TkAgg')  # Windows에서 이미지 표시를 위한 백엔드 설정
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+# 한글 폰트 설정
+def setup_korean_font():
+    korean_fonts = ['Malgun Gothic', 'NanumGothic', 'Batang', 'Gulim', 'MS Gothic']
+    available_fonts = set([f.name for f in fm.fontManager.ttflist])
+    
+    selected_font = None
+    for font in korean_fonts:
+        if font in available_fonts:
+            selected_font = font
+            break
+    
+    if selected_font:
+        plt.rcParams['font.family'] = [selected_font]
+        plt.rcParams['font.sans-serif'] = [selected_font] + plt.rcParams['font.sans-serif']
+        print(f"한글 폰트 설정됨: {selected_font}")
+    else:
+        plt.rcParams['font.family'] = ['DejaVu Sans']
+        print("기본 폰트 사용")
+    
+    plt.rcParams['axes.unicode_minus'] = False
+
+# 한글 폰트 설정 실행
+setup_korean_font()
 plt.rcParams['figure.figsize'] = (12, 8)
-plt.rcParams['axes.unicode_minus'] = False
 
 def create_government_network():
     """
@@ -291,10 +340,11 @@ def visualize_network(G, save_path=None):
     plt.tight_layout()
 
     if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"네트워크 시각화 저장: {save_path}")
 
-    plt.close()
+    plt.show()  # 이미지 화면에 표시
 
 def export_network_data(G, base_path):
     """
@@ -305,6 +355,9 @@ def export_network_data(G, base_path):
         base_path (str): 기본 저장 경로
     """
     print("\n네트워크 데이터 내보내기 중...")
+
+    # 디렉토리 생성
+    os.makedirs(base_path, exist_ok=True)
 
     # GraphML 형식으로 저장
     graphml_path = f"{base_path}/government_network.graphml"

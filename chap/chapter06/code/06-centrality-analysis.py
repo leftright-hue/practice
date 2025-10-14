@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 제6장 그래프 이론과 정책 네트워크 분석
@@ -8,6 +7,31 @@
 정부 부처의 정책 영향력을 종합적으로 분석합니다.
 """
 
+# 한글 출력 인코딩 문제 해결 (Windows 환경)
+import sys
+import os
+import locale
+
+# Windows 콘솔 코드페이지를 UTF-8로 설정
+if sys.platform == "win32":
+    try:
+        os.system("chcp 65001 > nul")
+    except:
+        pass
+
+# Python UTF-8 모드 강제 활성화
+os.environ['PYTHONUTF8'] = '1'
+
+# stdout/stderr 인코딩을 UTF-8로 재구성
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+else:
+    # 구 버전 Python 호환성
+    import codecs
+    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+    sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach())
+
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -16,11 +40,76 @@ import seaborn as sns
 from scipy.stats import pearsonr, spearmanr
 import warnings
 warnings.filterwarnings('ignore')
+import os
 
-# 한글 폰트 설정
-plt.rcParams['font.family'] = 'Arial Unicode MS'
+# 한글 폰트 설정 (Windows 환경에서 matplotlib 한글 지원)
+import matplotlib
+matplotlib.use('TkAgg')  # Windows에서 이미지 표시를 위한 백엔드 설정
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+# matplotlib 폰트 캐시 초기화 및 한글 폰트 강제 설정
+def setup_korean_font():
+    # 폰트 캐시 클리어 (새로운 방법)
+    try:
+        fm.fontManager.__init__()
+    except:
+        pass
+    
+    # 확실히 작동하는 한글 폰트들 (우선순위순)
+    korean_fonts = [
+        'Malgun Gothic',     # 맑은 고딕 (Windows 기본)
+        'NanumGothic',       # 나눔고딕  
+        'Batang',            # 바탕
+        'Gulim',             # 굴림
+        'HCR Dotum',         # HCR 돋움
+        'MS Gothic',         # MS 고딕
+        'Yu Gothic'          # Yu 고딕
+    ]
+    
+    # 사용 가능한 폰트 확인
+    available_fonts = set([f.name for f in fm.fontManager.ttflist])
+    
+    # 한글 폰트 설정
+    selected_font = None
+    for font in korean_fonts:
+        if font in available_fonts:
+            selected_font = font
+            break
+    
+    if selected_font:
+        # 폰트를 명시적으로 설정
+        plt.rcParams['font.family'] = [selected_font]
+        plt.rcParams['font.sans-serif'] = [selected_font] + plt.rcParams['font.sans-serif']
+        
+        # 폰트 크기도 명시적으로 설정
+        plt.rcParams['font.size'] = 10
+        plt.rcParams['axes.titlesize'] = 14
+        plt.rcParams['axes.labelsize'] = 12
+        plt.rcParams['xtick.labelsize'] = 10
+        plt.rcParams['ytick.labelsize'] = 10
+        plt.rcParams['legend.fontsize'] = 10
+        
+        print(f"한글 폰트 강제 설정됨: {selected_font}")
+        
+        # 테스트로 간단한 한글 출력
+        fig, ax = plt.subplots(figsize=(1, 1))
+        ax.text(0.5, 0.5, '테스트', ha='center', va='center', fontsize=12)
+        plt.close(fig)
+        print("한글 폰트 테스트 완료")
+        
+    else:
+        print("경고: 한글 폰트를 찾을 수 없습니다. 영문으로 표시될 수 있습니다.")
+        plt.rcParams['font.family'] = ['DejaVu Sans']
+    
+    # 기타 설정
+    plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
+    plt.rcParams['figure.dpi'] = 100
+    plt.rcParams['savefig.dpi'] = 300
+
+# 한글 폰트 설정 실행
+setup_korean_font()
 plt.rcParams['figure.figsize'] = (12, 8)
-plt.rcParams['axes.unicode_minus'] = False
 
 def calculate_all_centralities(G):
     """
@@ -262,6 +351,13 @@ def create_centrality_visualizations(df, correlation_matrix, save_path=None):
     """
     print("\n중심성 분석 시각화 생성 중...")
 
+    # 총 협업 프로젝트 수 계산 (필요 시 생성)
+    if 'total_projects' not in df.columns:
+        if ('total_in_projects' in df.columns) and ('total_out_projects' in df.columns):
+            df['total_projects'] = df['total_in_projects'] + df['total_out_projects']
+        else:
+            df['total_projects'] = pd.Series(0, index=df.index)
+
     # 1. 종합 영향력 점수 막대 그래프
     fig, axes = plt.subplots(2, 2, figsize=(20, 16))
 
@@ -313,9 +409,6 @@ def create_centrality_visualizations(df, correlation_matrix, save_path=None):
     # 4. 협업 프로젝트 vs 중심성
     ax4 = axes[1, 1]
 
-    # 총 협업 프로젝트 수 계산
-    df['total_projects'] = df['total_in_projects'] + df['total_out_projects']
-
     ax4.scatter(df['total_projects'], df['influence_score'],
                s=100, alpha=0.7, color='orange')
 
@@ -333,6 +426,7 @@ def create_centrality_visualizations(df, correlation_matrix, save_path=None):
     plt.tight_layout()
 
     if save_path:
+        os.makedirs(save_path, exist_ok=True)
         plt.savefig(f"{save_path}/centrality_analysis.png",
                    dpi=300, bbox_inches='tight')
         print(f"중심성 분석 시각화 저장: {save_path}/centrality_analysis.png")
@@ -395,6 +489,7 @@ def create_radar_chart(df, save_path=None):
               fontweight='bold', pad=30)
 
     if save_path:
+        os.makedirs(save_path, exist_ok=True)
         plt.savefig(f"{save_path}/centrality_radar.png",
                    dpi=300, bbox_inches='tight')
         print(f"레이더 차트 저장: {save_path}/centrality_radar.png")
@@ -412,6 +507,9 @@ def export_centrality_results(df, rankings, correlation_matrix, save_path):
         save_path (str): 저장 경로
     """
     print("\n중심성 분석 결과 내보내기 중...")
+
+    # Ensure directory exists
+    os.makedirs(save_path, exist_ok=True)
 
     # 1. 종합 중심성 결과 CSV
     df_export = df.round(4)
@@ -476,11 +574,14 @@ def main():
         print("기존 네트워크 불러오기 성공")
     except:
         print("네트워크를 새로 생성합니다...")
-        # 네트워크 재생성 코드 (간단 버전)
-        import sys
-        sys.path.append('.')
-        exec(open('06-government-network.py').read())
-        gov_network = government_network
+        # 안전하게 파일에서 모듈을 로드하여 네트워크 생성
+        import importlib.util
+        import os
+        module_path = os.path.join(os.path.dirname(__file__), '06-government-network.py')
+        spec = importlib.util.spec_from_file_location('gov_network_module', module_path)
+        gov_network_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(gov_network_module)
+        gov_network = gov_network_module.create_government_network()
 
     # 1. 모든 중심성 지표 계산
     centrality_df = calculate_all_centralities(gov_network)
