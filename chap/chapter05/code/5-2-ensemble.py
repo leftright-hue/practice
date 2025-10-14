@@ -40,7 +40,7 @@ class EnsembleModelImplementation:
     def generate_policy_data(self, n_samples=1500, n_features=8):
         """
         정책 예측을 위한 시뮬레이션 데이터 생성
-        ※ 본 데이터는 교육 목적의 시뮬레이션 데이터입니다
+        # 본 데이터는 교육 목적의 시뮬레이션 데이터입니다
 
         Parameters:
         n_samples (int): 샘플 수
@@ -319,8 +319,7 @@ class EnsembleModelImplementation:
             scores = cross_val_score(
                 model, X, y,
                 cv=cv_folds,
-                scoring='neg_mean_squared_error'
-            )
+                scoring='neg_mean_squared_error')
 
             cv_results[name] = {
                 'mean_score': -scores.mean(),
@@ -335,8 +334,7 @@ class EnsembleModelImplementation:
             ensemble_scores = cross_val_score(
                 self.ensemble, X, y,
                 cv=cv_folds,
-                scoring='neg_mean_squared_error'
-            )
+                scoring='neg_mean_squared_error')
 
             cv_results['ensemble'] = {
                 'mean_score': -ensemble_scores.mean(),
@@ -350,7 +348,7 @@ class EnsembleModelImplementation:
 
         return cv_results
 
-    def plot_model_comparison(self, results, save_path='../outputs/ensemble_comparison.png'):
+    def plot_model_comparison(self, results, save_path='outputs/ensemble_comparison.png'):
         """
         모델 성능 비교 시각화
 
@@ -385,7 +383,7 @@ class EnsembleModelImplementation:
 
         print(f"📈 성능 비교 차트 저장: {save_path}")
 
-    def plot_prediction_comparison(self, y_test, results, save_path='../outputs/prediction_comparison.png'):
+    def plot_prediction_comparison(self, y_test, results, save_path='outputs/prediction_comparison.png'):
         """
         예측 결과 비교 시각화
 
@@ -434,7 +432,7 @@ class EnsembleModelImplementation:
 
         return importance_dict
 
-    def plot_feature_importance(self, feature_names, save_path='../outputs/feature_importance.png'):
+    def plot_feature_importance(self, feature_names, save_path='outputs/feature_importance.png'):
         """
         특성 중요도 시각화
 
