@@ -14,7 +14,28 @@ import json
 from datetime import datetime, timedelta
 
 # 한글 폰트 설정
-plt.rcParams['font.family'] = 'Arial'
+import matplotlib.font_manager as fm
+
+# 사용 가능한 한글 폰트 찾기
+available_fonts = [f.name for f in fm.fontManager.ttflist]
+korean_fonts = [
+    'AppleGothic',        # macOS
+    'NanumGothic',        # 범용
+    'Malgun Gothic',      # Windows
+    'Gulim',              # Windows
+    'Batang',             # Windows
+    'Dotum',              # Windows
+    'Arial Unicode MS',   # 범용
+    'DejaVu Sans'         # Linux/범용
+]
+selected_font = 'DejaVu Sans'  # 기본값
+
+for font in korean_fonts:
+    if font in available_fonts:
+        selected_font = font
+        break
+
+plt.rcParams['font.family'] = selected_font
 plt.rcParams['axes.unicode_minus'] = False
 
 class DynamicPolicyNetwork:
@@ -237,7 +258,7 @@ class PolicyDiffusionModel:
         
         return pd.DataFrame(history)
 
-def visualize_network_evolution(dynamic_network, save_path='../outputs/'):
+def visualize_network_evolution(dynamic_network, save_path='chap/chapter06/outputs/'):
     """네트워크 진화 시각화"""
     
     metrics_df = dynamic_network.calculate_temporal_metrics()
@@ -315,7 +336,7 @@ def visualize_diffusion(diffusion_history, model_type='threshold'):
     axes[1].grid(True, alpha=0.3)
     
     plt.tight_layout()
-    plt.savefig(f'../outputs/diffusion_{model_type}.png', dpi=300, bbox_inches='tight')
+    plt.savefig(f'chap/chapter06/outputs/diffusion_{model_type}.png', dpi=300, bbox_inches='tight')
     plt.show()
 
 def main():
@@ -374,7 +395,7 @@ def main():
         print(f"  - 확산 단계: {len(si_history)}")
     
     # 결과 저장
-    metrics_df.to_csv('../outputs/network_evolution_metrics.csv', index=False)
+    metrics_df.to_csv('chap/chapter06/outputs/network_evolution_metrics.csv', index=False)
     print("\n분석 결과가 저장되었습니다.")
     
     return dynamic_net, threshold_history, si_history

@@ -1,0 +1,20 @@
+ministry,adoption_date,category,leadership_score,role
+환경부,2020-10-01,조기 채택자 (Early Adopters),10,주도부처
+기획재정부,2020-10-15,조기 채택자 (Early Adopters),9,예산총괄
+과학기술정보통신부,2020-11-01,조기 채택자 (Early Adopters),8,기술혁신
+산업통상자원부,2020-11-15,조기 다수 (Early Majority),9,산업전환
+국토교통부,2020-12-01,조기 다수 (Early Majority),8,건축교통
+외교부,2020-12-15,조기 다수 (Early Majority),6,국제협력
+농림축산식품부,2021-01-15,조기 다수 (Early Majority),7,농업부문
+해양수산부,2021-01-20,조기 다수 (Early Majority),7,해양부문
+중소벤처기업부,2021-02-01,조기 다수 (Early Majority),6,중소기업
+교육부,2021-02-15,후기 다수 (Late Majority),5,인재양성
+고용노동부,2021-03-01,후기 다수 (Late Majority),5,녹색일자리
+행정안전부,2021-03-15,후기 다수 (Late Majority),5,지자체지원
+보건복지부,2021-04-01,후기 다수 (Late Majority),4,건강영향
+문화체육관광부,2021-04-15,후기 다수 (Late Majority),4,문화전환
+통일부,2021-05-01,후기 다수 (Late Majority),3,남북협력
+여성가족부,2021-05-15,지각 채택자 (Laggards),3,기후정의
+법무부,2021-06-01,지각 채택자 (Laggards),3,법제정비
+국방부,2021-07-01,지각 채택자 (Laggards),2,국방탄소
+국가보훈부,2021-08-01,지각 채택자 (Laggards),1,보훈시설

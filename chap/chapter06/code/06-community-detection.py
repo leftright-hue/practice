@@ -18,7 +18,28 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # 한글 폰트 설정
-plt.rcParams['font.family'] = 'Arial Unicode MS'
+import matplotlib.font_manager as fm
+
+# 사용 가능한 한글 폰트 찾기
+available_fonts = [f.name for f in fm.fontManager.ttflist]
+korean_fonts = [
+    'AppleGothic',        # macOS
+    'NanumGothic',        # 범용
+    'Malgun Gothic',      # Windows
+    'Gulim',              # Windows
+    'Batang',             # Windows
+    'Dotum',              # Windows
+    'Arial Unicode MS',   # 범용
+    'DejaVu Sans'         # Linux/범용
+]
+selected_font = 'DejaVu Sans'  # 기본값
+
+for font in korean_fonts:
+    if font in available_fonts:
+        selected_font = font
+        break
+
+plt.rcParams['font.family'] = selected_font
 plt.rcParams['figure.figsize'] = (12, 8)
 plt.rcParams['axes.unicode_minus'] = False
 
@@ -198,6 +219,11 @@ def create_functional_communities(G):
         for ministry in ministries:
             if ministry in G.nodes():
                 partition[ministry] = group_id
+
+    # 누락된 노드를 별도 그룹에 할당
+    for node in G.nodes():
+        if node not in partition:
+            partition[node] = max(functional_groups.keys()) + 1
 
     return partition
 
@@ -696,15 +722,15 @@ def main():
 
     # 5. 시각화
     visualize_communities(gov_network, detection_results,
-                         'practice/chapter06/outputs')
+                         'chap/chapter06/outputs')
     create_community_network_layout(gov_network, best_partition,
-                                   'practice/chapter06/outputs')
+                                   'chap/chapter06/outputs')
 
     # 6. 결과 내보내기
     export_community_results(detection_results, community_analyses,
-                            policy_themes, 'practice/chapter06/data')
+                            policy_themes, 'chap/chapter06/data')
 
-    print("\n커뮤니티 분석 완료! 결과가 practice/chapter06/ 디렉토리에 저장되었습니다.")
+    print("\n커뮤니티 분석 완료! 결과가 chap/chapter06/ 디렉토리에 저장되었습니다.")
 
     return detection_results, community_analyses, policy_themes
 
