@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>탄소중립 2050 정책 확산 분석 보고서</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #2c5530;
+        }
+        h1 {
+            color: #2c5530;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        h2 {
+            color: #2c5530;
+            border-left: 5px solid #4CAF50;
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c5530;
+            margin-top: 25px;
+        }
+        .highlight {
+            background-color: #e8f5e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c5530;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #2c5530;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .ministry-category {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .early-adopters {
+            background-color: #e8f5e8;
+            border-left: 4px solid #4CAF50;
+        }
+        .early-majority {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .late-majority {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .laggards {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        .conclusion {
+            background-color: #2c5530;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            color: #666;
+        }
+        .key-findings {
+            background-color: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        .network-metrics {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .metric {
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 5px;
+            min-width: 150px;
+        }
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c5530;
+        }
+        .ministry-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .ministry-tag {
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        .chart-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c5530;
+            margin-bottom: 15px;
+        }
+        .chart-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>탄소중립 2050 정책 확산 분석</h1>
+            <div class="subtitle">네트워크 분석을 통한 정부 부처 간 정책 확산 과정 연구</div>
+            <div class="subtitle" style="margin-top: 10px; font-size: 1em;">분석 기간: 2020년 10월 1일 ~ 2021년 8월 1일</div>
+        </div>
+
+        <div class="key-findings">
+            <h2>🔍 핵심 발견사항</h2>
+            <ul>
+                <li><strong>완전 확산 달성:</strong> 19개 정부 부처가 304일 동안 100% 정책 수용</li>
+                <li><strong>환경부 주도:</strong> 모든 중심성 지표에서 1위를 차지하며 정책 확산의 허브 역할</li>
+                <li><strong>경제 부처 조기 수용:</strong> 기획재정부, 산업통상자원부 등이 빠른 정책 채택</li>
+                <li><strong>점진적 확산 패턴:</strong> Rogers 혁신 확산 이론에 부합하는 단계적 확산</li>
+            </ul>
+        </div>
+
+        <h2>📊 분석 개요</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">304일</div>
+                <div class="stat-label">총 확산 기간</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">19개</div>
+                <div class="stat-label">참여 부처</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">최종 채택률</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">27개</div>
+                <div class="stat-label">협력 관계</div>
+            </div>
+        </div>
+
+        <h2>🌐 네트워크 분석 결과</h2>
+        
+        <div class="chart-container">
+            <div class="chart-title">📊 정책 확산 타임라인</div>
+            <img src="carbon_neutral_timeline.png" alt="탄소중립 정책 확산 타임라인">
+            <div class="chart-description">2020년 10월부터 2021년 8월까지의 월별 정책 채택 현황과 예산 추이</div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">🌐 정책 확산 네트워크 구조</div>
+            <img src="carbon_neutral_network.png" alt="탄소중립 정책 확산 네트워크">
+            <div class="chart-description">19개 정부 부처 간의 정책 확산 네트워크와 Rogers 혁신 확산 단계별 색상 구분</div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">🔥 부처 간 영향력 히트맵</div>
+            <img src="carbon_neutral_influence_heatmap.png" alt="부처 간 영향력 히트맵">
+            <div class="chart-description">부처 간 상호 영향력 관계를 나타내는 히트맵 (진한 색일수록 강한 영향력)</div>
+        </div>
+        
+        <h3>네트워크 지표</h3>
+        <div class="network-metrics">
+            <div class="metric">
+                <div class="metric-value">0.079</div>
+                <div>네트워크 밀도</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">2.84</div>
+                <div>평균 연결도</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">19</div>
+                <div>노드 수</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">27</div>
+                <div>엣지 수</div>
+            </div>
+        </div>
+
+        <h3>상위 5개 부처 중심성 분석</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>부처명</th>
+                    <th>Out-Centrality<br>(정책 전파력)</th>
+                    <th>In-Centrality<br>(정책 수용력)</th>
+                    <th>Betweenness<br>(매개 중심성)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background-color: #e8f5e8;">
+                    <td><strong>환경부</strong></td>
+                    <td><strong>0.333</strong></td>
+                    <td><strong>0.333</strong></td>
+                    <td><strong>0.196</strong></td>
+                </tr>
+                <tr>
+                    <td>산업통상자원부</td>
+                    <td>0.167</td>
+                    <td>0.278</td>
+                    <td>0.071</td>
+                </tr>
+                <tr>
+                    <td>과학기술정보통신부</td>
+                    <td>0.111</td>
+                    <td>0.222</td>
+                    <td>0.051</td>
+                </tr>
+                <tr>
+                    <td>국토교통부</td>
+                    <td>0.111</td>
+                    <td>0.111</td>
+                    <td>0.033</td>
+                </tr>
+                <tr>
+                    <td>기획재정부</td>
+                    <td>0.167</td>
+                    <td>0.056</td>
+                    <td>0.000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>📈 Rogers 혁신 확산 이론 적용</h2>
+        <p>정부 부처들을 혁신 수용 속도에 따라 4개 그룹으로 분류했습니다.</p>
+
+        <div class="ministry-category early-adopters">
+            <h3>🚀 조기 채택자 (Early Adopters) - 3개 부처</h3>
+            <div class="ministry-list">
+                <span class="ministry-tag">환경부</span>
+                <span class="ministry-tag">기획재정부</span>
+                <span class="ministry-tag">과학기술정보통신부</span>
+            </div>
+            <p>정책 전문성과 리더십을 바탕으로 초기 정책 채택을 주도한 부처들</p>
+        </div>
+
+        <div class="ministry-category early-majority">
+            <h3>⚡ 조기 다수 (Early Majority) - 6개 부처</h3>
+            <div class="ministry-list">
+                <span class="ministry-tag">산업통상자원부</span>
+                <span class="ministry-tag">국토교통부</span>
+                <span class="ministry-tag">외교부</span>
+                <span class="ministry-tag">농림축산식품부</span>
+                <span class="ministry-tag">해양수산부</span>
+                <span class="ministry-tag">중소벤처기업부</span>
+            </div>
+            <p>경제적 중요성을 인식하고 비교적 빠르게 정책을 수용한 부처들</p>
+        </div>
+
+        <div class="ministry-category late-majority">
+            <h3>🔄 후기 다수 (Late Majority) - 6개 부처</h3>
+            <div class="ministry-list">
+                <span class="ministry-tag">교육부</span>
+                <span class="ministry-tag">고용노동부</span>
+                <span class="ministry-tag">행정안전부</span>
+                <span class="ministry-tag">보건복지부</span>
+                <span class="ministry-tag">문화체육관광부</span>
+                <span class="ministry-tag">통일부</span>
+            </div>
+            <p>신중한 검토 후 정책을 수용한 부처들</p>
+        </div>
+
+        <div class="ministry-category laggards">
+            <h3>⏰ 지각 채택자 (Laggards) - 4개 부처</h3>
+            <div class="ministry-list">
+                <span class="ministry-tag">여성가족부</span>
+                <span class="ministry-tag">법무부</span>
+                <span class="ministry-tag">국방부</span>
+                <span class="ministry-tag">국가보훈부</span>
+            </div>
+            <p>전통적이고 보수적인 접근으로 가장 늦게 정책을 수용한 부처들</p>
+        </div>
+
+        <h2>📋 정책 확산 단계별 분석</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>기간</th>
+                    <th>신규 채택 부처</th>
+                    <th>누적 채택률</th>
+                    <th>총 예산 (억원)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>2020-10</td><td>2개</td><td>10.5%</td><td>1,500</td></tr>
+                <tr><td>2020-11</td><td>2개</td><td>21.1%</td><td>1,400</td></tr>
+                <tr><td>2020-12</td><td>2개</td><td>31.6%</td><td>900</td></tr>
+                <tr><td>2021-01</td><td>2개</td><td>42.1%</td><td>750</td></tr>
+                <tr><td>2021-02</td><td>2개</td><td>52.6%</td><td>500</td></tr>
+                <tr><td>2021-03</td><td>2개</td><td>63.2%</td><td>450</td></tr>
+                <tr><td>2021-04</td><td>2개</td><td>73.7%</td><td>270</td></tr>
+                <tr><td>2021-05</td><td>2개</td><td>84.2%</td><td>180</td></tr>
+                <tr><td>2021-06</td><td>1개</td><td>89.5%</td><td>50</td></tr>
+                <tr><td>2021-07</td><td>1개</td><td>94.7%</td><td>100</td></tr>
+                <tr style="background-color: #e8f5e8;"><td>2021-08</td><td>1개</td><td><strong>100.0%</strong></td><td>30</td></tr>
+            </tbody>
+        </table>
+
+        <h2>🎯 정책적 시사점</h2>
+        
+        <div class="highlight">
+            <h3>1. 전문 부처의 리더십이 핵심</h3>
+            <p>환경부가 모든 중심성 지표에서 1위를 차지한 것은 정책 전문성과 리더십이 확산 과정에서 결정적 역할을 함을 보여줍니다. 향후 유사한 정책에서도 전문 부처의 주도적 역할이 중요할 것입니다.</p>
+        </div>
+
+        <div class="highlight">
+            <h3>2. 경제적 중요성의 인식</h3>
+            <p>기획재정부, 산업통상자원부 등 경제 관련 부처들이 조기에 정책을 수용한 것은 탄소중립 정책의 경제적 중요성이 널리 인식되었음을 의미합니다.</p>
+        </div>
+
+        <div class="highlight">
+            <h3>3. 점진적 확산의 효과</h3>
+            <p>304일에 걸친 점진적 확산은 대규모 정책 변화에 필요한 충분한 준비 기간과 단계적 접근의 중요성을 보여줍니다.</p>
+        </div>
+
+        <div class="highlight">
+            <h3>4. 협력 네트워크의 가치</h3>
+            <p>평균 2.84개의 연결도는 부처 간 협력이 정책 성공에 핵심적임을 시사하며, 향후 유사한 정책에서도 부처 간 협력 체계 구축이 중요할 것입니다.</p>
+        </div>
+
+        <h2>🔍 환경부로부터의 영향력 전파 경로</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>대상 부처</th>
+                    <th>경로 길이</th>
+                    <th>전파 경로</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>산업통상자원부</td><td>1</td><td>환경부 → 산업통상자원부</td></tr>
+                <tr><td>국토교통부</td><td>1</td><td>환경부 → 국토교통부</td></tr>
+                <tr><td>기획재정부</td><td>1</td><td>환경부 → 기획재정부</td></tr>
+                <tr><td>과학기술정보통신부</td><td>1</td><td>환경부 → 과학기술정보통신부</td></tr>
+                <tr><td>농림축산식품부</td><td>1</td><td>환경부 → 농림축산식품부</td></tr>
+                <tr><td>해양수산부</td><td>1</td><td>환경부 → 해양수산부</td></tr>
+                <tr><td>중소벤처기업부</td><td>2</td><td>환경부 → 산업통상자원부 → 중소벤처기업부</td></tr>
+                <tr><td>고용노동부</td><td>2</td><td>환경부 → 산업통상자원부 → 고용노동부</td></tr>
+                <tr><td>행정안전부</td><td>2</td><td>환경부 → 국토교통부 → 행정안전부</td></tr>
+                <tr><td>교육부</td><td>2</td><td>환경부 → 과학기술정보통신부 → 교육부</td></tr>
+            </tbody>
+        </table>
+
+        <div class="conclusion">
+            <h2>💡 결론</h2>
+            <p>탄소중립 2050 정책의 확산 과정 분석을 통해 다음과 같은 중요한 결론을 도출했습니다:</p>
+            <ul>
+                <li><strong>전문 부처의 리더십이 핵심:</strong> 환경부의 중심적 역할이 정책 확산의 성공 요인</li>
+                <li><strong>경제적 중요성의 인식:</strong> 경제 관련 부처들의 빠른 수용으로 정책 동력 확보</li>
+                <li><strong>점진적 접근의 효과:</strong> 충분한 시간을 통한 단계적 확산으로 완전한 정책 수용 달성</li>
+                <li><strong>협력 네트워크의 가치:</strong> 부처 간 협력이 정책 성공의 핵심 동력</li>
+            </ul>
+            <p>이러한 분석 결과는 향후 대규모 정책 도입 시 참고할 수 있는 중요한 인사이트를 제공합니다.</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>분석 정보</strong></p>
+            <p>분석 도구: Python NetworkX, 정책 확산 시뮬레이션</p>
+            <p>분석 방법: 네트워크 분석, Rogers 혁신 확산 이론</p>
+            <p>보고서 생성일: 2025년 10월 15일</p>
+        </div>
+    </div>
+</body>
+</html>
