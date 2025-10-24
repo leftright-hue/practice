@@ -1,0 +1,32 @@
+=== 정책 연합별 주제 분석 ===
+
+연합 1: 경제 정책
+  주도 유형: economic_policy
+  주제 강도: 0.33
+  세부 유형: {'economic_policy': 1, 'startup_support': 1, 'industry_support': 1}
+
+연합 2: 디지털 교육
+  주도 유형: digital_education
+  주제 강도: 0.25
+  세부 유형: {'digital_education': 1, 'smart_city': 1, 'digital_culture': 1, 'cultural_education': 1}
+
+연합 3: 외교 정책
+  주도 유형: foreign_policy
+  주제 강도: 0.20
+  세부 유형: {'foreign_policy': 1, 'defense_diplomacy': 1, 'sustainable_agriculture': 1, 'marine_environment': 1, 'maritime_diplomacy': 1}
+
+연합 4: 기타 정책
+  주도 유형: legal_administration
+  주제 강도: 1.00
+  세부 유형: {'legal_administration': 1}
+
+연합 5: 사회 안전망
+  주도 유형: social_safety
+  주제 강도: 0.33
+  세부 유형: {'social_safety': 1, 'family_welfare': 1, 'gender_employment': 1}
+
+연합 6: 기타 정책
+  주도 유형: isolated
+  주제 강도: 0.00
+  세부 유형: {}
+

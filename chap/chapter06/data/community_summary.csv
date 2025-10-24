@@ -1,0 +1,5 @@
+method,modularity,n_communities
+louvain,0.38901695419393223,6
+label_propagation,0.39024390243902446,6
+girvan_newman,0.1906417311124332,3
+functional,0.3430621653777514,7
