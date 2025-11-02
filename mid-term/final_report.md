@@ -17,7 +17,7 @@
 - **정책 효과**: 처치군에서 서비스 이용률 20.2% 증가, 처리시간 7.5분 단축, 만족도 0.5점 상승
 - **통계적 검증**: 차이의차이(DID) 분석 결과 모든 지표에서 p<0.001 수준의 통계적 유의성 확인
 - **시민 반응**: 긍정 감성 14.3%p 증가, 부정 감성 9.8%p 감소
-- **경제적 효과**: 비용편익비(B/C ratio) 2.67로 높은 투자 효율성
+- **경제적 효과**: 비용편익비(B/C 비율) 2.67로 높은 투자 효율성
 
 **정책 제언**: 즉시 전체 자치구 확대 도입을 권고하며, 단계별 실행 계획을 제시합니다.
 
@@ -98,43 +98,39 @@
 
 **기초 통계 분석**:
 
-```python
-# 정책 전후 평균 비교 (처치군)
-print("처치군 변화:")
-print(f"이용률: {before_treatment['usage_count'].mean():.1f} → {after_treatment['usage_count'].mean():.1f} (+{((after_treatment['usage_count'].mean()/before_treatment['usage_count'].mean()-1)*100):.1f}%)")
-print(f"처리시간: {before_treatment['processing_time'].mean():.1f}분 → {after_treatment['processing_time'].mean():.1f}분 ({after_treatment['processing_time'].mean()-before_treatment['processing_time'].mean():+.1f}분)")
-print(f"만족도: {before_treatment['satisfaction'].mean():.2f} → {after_treatment['satisfaction'].mean():.2f} ({after_treatment['satisfaction'].mean()-before_treatment['satisfaction'].mean():+.2f}점)")
-```
+
 
 **주요 발견사항**:
 - **처치군**: 이용률 +20.2%, 처리시간 -7.5분, 만족도 +0.50점
 - **대조군**: 모든 지표에서 거의 변화 없음 (±0.1% 내외)
 - **시각적 패턴**: 2022년 1월 이후 처치군에서 뚜렷한 상승 추세 확인
 
+### 시각화 자료
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div style="text-align: center;">
+        <img src="images/monthly_usage_change.png" alt="월별 평균 이용률 변화" style="width:100%;">
+        <p>월별 평균 이용률 변화</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/monthly_processing_time_change.png" alt="월별 평균 처리시간 변화" style="width:100%;">
+        <p>월별 평균 처리시간 변화</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/monthly_satisfaction_change.png" alt="월별 평균 만족도 변화" style="width:100%;">
+        <p>월별 평균 만족도 변화</p>
+    </div>
+    <div style="text-align: center;">
+        <img src="images/district_satisfaction_after_policy.png" alt="자치구별 만족도 (정책 이후)" style="width:100%;">
+        <p>자치구별 만족도 (정책 이후)</p>
+    </div>
+</div>
+
 ### 2.2 Chapter 02: 인과추론 분석 결과
 
 **차이의차이(DID) 회귀분석**:
 
-```python
-# DID 모델 실행
-import statsmodels.api as sm
-from statsmodels.formula.api import ols
 
-# DID 분석을 위한 데이터 준비
-service_did = service_df.copy()
-service_did['post'] = service_did['policy_period'].astype(int)
-service_did['treatment'] = service_did['treatment_group'].astype(int)
-service_did['did'] = service_did['post'] * service_did['treatment']
-
-# 주요 성과지표별 DID 분석
-outcomes = ['usage_count', 'processing_time', 'satisfaction']
-for outcome in outcomes:
-    formula = f'{outcome} ~ treatment + post + did'
-    model = ols(formula, data=service_did).fit()
-    did_effect = model.params['did']
-    p_value = model.pvalues['did']
-    print(f"{outcome} DID 효과: {did_effect:.3f} (p={p_value:.6f})")
-```
 
 **통계적 검증 결과**:
 
@@ -150,28 +146,7 @@ for outcome in outcomes:
 
 **ARIMA 모델링 및 정책 효과 분해**:
 
-```python
-# 시계열 분석
-from statsmodels.tsa.arima.model import ARIMA
 
-# 처치군 일별 평균 이용률 시계열 생성
-treatment_ts = service_df[service_df['treatment_group']==True].groupby('date')['usage_count'].mean()
-
-# 정책 이전 데이터로 ARIMA 모델 학습
-train_data = treatment_ts[treatment_ts.index < '2022-01-01']
-model = ARIMA(train_data, order=(1,1,1))
-fitted_model = model.fit()
-
-# 정책 이후 기간 예측
-test_data = treatment_ts[treatment_ts.index >= '2022-01-01']
-forecast = fitted_model.forecast(steps=len(test_data))
-
-# 정책 효과 계산
-actual_mean = test_data.mean()
-forecast_mean = forecast.mean()
-policy_effect = actual_mean - forecast_mean
-print(f"시계열 분석 정책 효과: +{policy_effect:.1f}건 ({((actual_mean/forecast_mean-1)*100):+.1f}%)")
-```
 
 **주요 결과**:
 - **정책 순효과**: +12.4건 (+21.3%)
@@ -182,27 +157,7 @@ print(f"시계열 분석 정책 효과: +{policy_effect:.1f}건 ({((actual_mean/
 
 **감성분석 및 키워드 변화**:
 
-```python
-# 텍스트 분석
-from collections import Counter
-import re
 
-# 감성 분석 - 정책 전후 비교
-treatment_before = complaints_df[(complaints_df['treatment_group']==True) & (complaints_df['policy_period']==False)]
-treatment_after = complaints_df[(complaints_df['treatment_group']==True) & (complaints_df['policy_period']==True)]
-
-print(f"긍정 감성: {(treatment_before['sentiment']=='긍정').mean():.1%} → {(treatment_after['sentiment']=='긍정').mean():.1%}")
-print(f"부정 감성: {(treatment_before['sentiment']=='부정').mean():.1%} → {(treatment_after['sentiment']=='부정').mean():.1%}")
-
-# 카테고리별 처리일수 개선
-category_improvement = complaints_df[complaints_df['treatment_group']==True].groupby(['category', 'policy_period'])['resolution_days'].mean().unstack()
-print("카테고리별 처리일수 개선:")
-for category in category_improvement.index:
-    before = category_improvement.loc[category, False]
-    after = category_improvement.loc[category, True]
-    improvement = before - after
-    print(f"{category}: {before:.1f}일 → {after:.1f}일 (-{improvement:.1f}일)")
-```
 
 **주요 결과**:
 - **감성 변화**: 긍정 37.2% → 51.5% (+14.3%p), 부정 25.4% → 15.6% (-9.8%p)
@@ -213,44 +168,26 @@ for category in category_improvement.index:
 
 **Random Forest 예측 모델링**:
 
-```python
-# 머신러닝 분석
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error, r2_score
 
-# 특성 엔지니어링
-features = ['district_encoded', 'service_encoded', 'year', 'month', 'day_of_week', 
-           'treatment_group', 'policy_period', 'policy_intervention']
-X = ml_data[features]
-y_usage = ml_data['usage_count']
-
-# 모델 학습 및 평가
-X_train, X_test, y_train, y_test = train_test_split(X, y_usage, test_size=0.2, random_state=42)
-rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
-rf_model.fit(X_train, y_train)
-
-# 성능 평가
-y_pred = rf_model.predict(X_test)
-print(f"MAE: {mean_absolute_error(y_test, y_pred):.2f}")
-print(f"R²: {r2_score(y_test, y_pred):.3f}")
-
-# 정책 효과 시뮬레이션
-X_policy_on = X_test.copy()
-X_policy_on['policy_intervention'] = 1
-X_policy_off = X_test.copy()
-X_policy_off['policy_intervention'] = 0
-
-pred_with_policy = rf_model.predict(X_policy_on).mean()
-pred_without_policy = rf_model.predict(X_policy_off).mean()
-ml_policy_effect = pred_with_policy - pred_without_policy
-print(f"ML 추정 정책효과: +{ml_policy_effect:.1f}건")
-```
 
 **주요 결과**:
-- **예측 성능**: MAE=8.95, R²=0.848 (높은 예측 정확도)
+- **예측 성능**: MAE(평균 절대 오차)=8.95, R²(결정계수)=0.848 (높은 예측 정확도)
 - **특성 중요도**: 서비스 유형(53.1%) > 요일(20.9%) > 월(11.7%) > 자치구(10.1%)
 - **정책 효과**: +5.8건 (다른 방법론과 일관된 결과)
+
+---
+
+### 2.6 Chapter 06: 네트워크 분석 결과
+
+**네트워크 기본 지표 및 협업 강도**
+
+
+
+**주요 결과**:
+- **네트워크 밀도**: 정책 전 0.985 → 정책 후 1.000 (+1.5%p 증가)
+- **총 협업 건수**: 정책 전 678건 → 정책 후 6,423건 (+847.3% 증가)
+- **핵심 부서 변화**: 정책 전 '행정지원과', '기획재정과' → 정책 후 '기획재정과', '도시계획과' 등으로 변화
+- **프로젝트 유형별 협업 증가**: 모든 프로젝트 유형에서 협업 건수 크게 증가 (예: '일자리 창출' +1876.7%)
 
 ---
 

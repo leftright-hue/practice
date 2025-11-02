@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2강: 인과추론과 머신러닝 결합 - 완전 정리</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .chapter-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            border-left: 5px solid #00b894;
+        }
+        .section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h3 {
+            color: #34495e;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+            padding: 10px;
+            background: #e8f6f3;
+            border-radius: 8px;
+            border-left: 4px solid #00b894;
+        }
+        .goal-box {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .file-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-top: 5px solid #fd79a8;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .file-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .file-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00b894, #00cec9, #74b9ff);
+        }
+        .file-number {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+        }
+        .concept-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .concept-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid #fd79a8;
+            transition: transform 0.3s ease;
+        }
+        .concept-card:hover {
+            transform: translateY(-5px);
+        }
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #e84393;
+        }
+        .methods-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .method-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #74b9ff;
+        }
+        .data-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .checklist {
+            background: #d5f4e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .checklist ul {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 30px;
+        }
+        .checklist li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+            top: 8px;
+        }
+        .emoji {
+            font-size: 1.2em;
+        }
+        .nav-menu {
+            background: #2d3436;
+            padding: 20px;
+            text-align: center;
+        }
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        .nav-menu a:hover {
+            background: #636e72;
+        }
+        .footer {
+            background: #2d3436;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        .progress-bar {
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 20px;
+            background: linear-gradient(90deg, #00b894, #00cec9);
+            color: white;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00b894;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .comparison-table th {
+            background: #00b894;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            .header {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .content {
+                padding: 20px;
+            }
+            .files-grid, .concept-cards, .methods-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="emoji">📊</span> 2강: 인과추론과 머신러닝 결합</h1>
+            <p>정책분석을 위한 고급 통계 기법 완전 정리</p>
+            <div class="chapter-badge">
+                <span class="emoji">🧠</span> Chapter 02
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="#overview">전체 개요</a>
+            <a href="#files">실습 파일</a>
+            <a href="#concepts">핵심 개념</a>
+            <a href="#methods">분석 방법</a>
+            <a href="#applications">실제 활용</a>
+            <a href="#skills">배우는 스킬</a>
+            <a href="#summary">정리</a>
+        </div>
+
+        <div class="content">
+            <div class="goal-box" id="overview">
+                <span class="emoji">🎯</span> <strong>2장 핵심 주제:</strong> "정책분석을 위한 인과추론 기초와 머신러닝 결합"
+            </div>
+
+            <div class="section">
+                <h2><span class="emoji">📂</span> 폴더 구조 한눈에 보기</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div>실습 파일</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8</div>
+                        <div>데이터 파일</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div>핵심 방법론</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div>실제 정책 사례</div>
+                    </div>
+                </div>
+
+                <h3>📁 code/ - 6개 실습 파일</h3>
+                <ul>
+                    <li><strong>01_basic_causal.py</strong> - 기초연금 정책 분석 (선택편향)</li>
+                    <li><strong>01_data_generation.py</strong> - 장학금 데이터 생성</li>
+                    <li><strong>01_selection_bias.py</strong> - 선택편향 시뮬레이션</li>
+                    <li><strong>02_causal_forest_analysis.py</strong> - 인과추론 포레스트 (이질적 효과)</li>
+                    <li><strong>02_psm_analysis.py</strong> - 성향점수매칭 (PSM)</li>
+                    <li><strong>03_did_analysis.py</strong> - 차분-차분 분석 (코로나 재난지원금)</li>
+                </ul>
+
+                <h3>📁 data/ - 8개 데이터 파일</h3>
+                <ul>
+                    <li>기초연금, 장학금, 취업훈련, 코로나 지원금 관련 시뮬레이션 데이터</li>
+                </ul>
+            </div>
+
+            <div class="section" id="files">
+                <h2><span class="emoji">🔍</span> 6가지 실습 내용 완전 분석</h2>
+
+                <div class="files-grid">
+                    <div class="file-card">
+                        <div class="file-number">1</div>
+                        <h4>🏛️ 기초연금 정책 효과 분석</h4>
+                        <p><code>01_basic_causal.py</code></p>
+                        
+                        <div class="data-info">
+                            <strong>💰 실제 데이터 반영:</strong><br>
+                            • 수급자: 736만명<br>
+                            • 월 지급액: 2025년 342,510원<br>
+                            • 소득 기준: 단독 228만원
+                        </div>
+
+                        <div class="code-block">
+문제: 가난한 사람만 기초연금 받음
+→ 단순 비교하면 편향됨
+
+해결: 공변량 조정으로 편향 크게 감소
+진짜 효과: 34.3만원 (실제 지급액)
+                        </div>
+                    </div>
+
+                    <div class="file-card">
+                        <div class="file-number">2</div>
+                        <h4>🎓 장학금 데이터 생성</h4>
+                        <p><code>01_data_generation.py</code></p>
+                        
+                        <div class="code-block">
+2000명 학생 시뮬레이션:
+• ability: 학업 능력 (평균 70)
+• income: 가정 소득 (1000만원 단위)
+• motivation: 학습 의지 (0-1)
+• scholarship: 장학금 수혜 여부
+• score: 대학 진학 시험 점수
+                        </div>
+
+                        <div class="highlight-box">
+                            <strong>💡 현실성:</strong><br>
+                            저소득 + 높은 학습의지 → 장학금 효과 크게<br>
+                            고소득 + 낮은 학습의지 → 장학금 효과 작게
+                        </div>
+                    </div>
+
+                    <div class="file-card">
+                        <div class="file-number">3</div>
+                        <h4>⚖️ 선택편향 시뮬레이션</h4>
+                        <p><code>01_selection_bias.py</code></p>
+                        
+                        <div class="code-block">
+🔍 쉬운 설명:
+문제: "장학금 받은 학생이 성적 더 좋네?"
+실제: 원래 잘하는 학생이 장학금 받은 거임!
+해결: 비슷한 조건의 학생들끼리 비교
+
+📈 분석 결과:
+• 진짜 효과: 장학금의 실제 효과
+• 단순 비교: 편향된 과대 추정
+• 공변량 조정: 편향 크게 감소
+                        </div>
+                    </div>
+
+                    <div class="file-card">
+                        <div class="file-number">4</div>
+                        <h4>🌲 인과추론 포레스트</h4>
+                        <p><code>02_causal_forest_analysis.py</code></p>
+                        
+                        <div class="highlight-box">
+                            <strong>🤖 AI + 인과추론 결합!</strong><br>
+                            머신러닝으로 개인별 맞춤 효과 추정<br>
+                            "이 학생에게는 장학금이 얼마나 도움 될까?"
+                        </div>
+
+                        <div class="code-block">
+💡 핵심 발견:
+• 저소득 & 높은 학습의지: 장학금 효과 ↑↑
+• 고소득 & 낮은 학습의지: 장학금 효과 ↓↓
+→ 개인별 맞춤 정책 필요!
+                        </div>
+                    </div>
+
+                    <div class="file-card">
+                        <div class="file-number">5</div>
+                        <h4>🎯 성향점수매칭 (PSM)</h4>
+                        <p><code>02_psm_analysis.py</code></p>
+                        
+                        <div class="code-block">
+🔍 쉬운 비유:
+문제: 처치군과 대조군이 너무 달라요
+해결: 비슷한 특성의 사람들끼리 1:1 매칭
+결과: 공정한 비교 가능!
+
+📊 과정:
+1. 성향점수 계산 (처치받을 확률)
+2. 매칭 (비슷한 점수끼리 짝 맞추기)
+3. 균형 테스트 (매칭이 잘 됐나 확인)
+4. 효과 측정 (ATT 계산)
+                        </div>
+                    </div>
+
+                    <div class="file-card">
+                        <div class="file-number">6</div>
+                        <h4>📈 차분-차분 분석 (DID)</h4>
+                        <p><code>03_did_analysis.py</code></p>
+                        
+                        <div class="data-info">
+                            <strong>🏆 코로나 재난지원금 효과 분석</strong><br>
+                            • 시간: 2020년 1-12월<br>
+                            • 지역: 서울/경기 vs 기타<br>
+                            • 정책: 6월 재난지원금 지급<br>
+                            • 효과: 소비 지출 변화 측정
+                        </div>
+
+                        <div class="code-block">
+🎯 DID의 핵심 아이디어:
+Before: 서울/경기와 기타 지역 소비 차이
+After:  정책 후 소비 차이
+DID =   (After 차이) - (Before 차이)
+
+📈 분석 결과:
+재난지원금 효과: 약 25만원 소비 증가
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="concepts">
+                <h2><span class="emoji">🧠</span> 핵심 개념 3가지</h2>
+
+                <div class="concept-cards">
+                    <div class="concept-card">
+                        <h4>1️⃣ 선택편향 (Selection Bias)</h4>
+                        <div class="code-block">
+🚨 문제: 처치받는 사람들이 특별함
+💡 해결: 비슷한 조건끼리 비교
+🔧 방법: 회귀분석, PSM, 실험설계
+                        </div>
+                        <p><strong>예시:</strong> 병원에 오는 사람들은 아픈 사람들 → 병원이 건강에 나쁘다고 결론? ❌</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>2️⃣ 이질적 효과 (Heterogeneous Effects)</h4>
+                        <div class="code-block">
+🎯 개념: 사람마다 정책 효과가 다름
+🤖 도구: Causal Forest (AI + 인과추론)
+📊 활용: 개인별 맞춤 정책 설계
+                        </div>
+                        <p><strong>예시:</strong> 같은 약도 사람마다 효과가 다름 → 개인별 맞춤 처방 필요</p>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>3️⃣ 인과추론 방법론</h4>
+                        <div class="code-block">
+🔬 PSM: 비슷한 사람들끼리 매칭
+📊 DID: 시간 변화 + 집단 차이 활용
+🌲 Causal Forest: 머신러닝으로 개인별 효과
+                        </div>
+                        <p><strong>목표:</strong> 상관관계가 아닌 진짜 인과관계 찾기</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="methods">
+                <h2><span class="emoji">🔬</span> 분석 방법론 비교</h2>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>방법론</th>
+                            <th>핵심 아이디어</th>
+                            <th>장점</th>
+                            <th>적용 상황</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>회귀분석</strong></td>
+                            <td>공변량 통제</td>
+                            <td>간단하고 이해하기 쉬움</td>
+                            <td>관찰되는 변수로 설명 가능</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PSM</strong></td>
+                            <td>비슷한 사람끼리 매칭</td>
+                            <td>직관적이고 시각적</td>
+                            <td>처치군/대조군 특성이 다를 때</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DID</strong></td>
+                            <td>시간 변화를 활용</td>
+                            <td>관찰되지 않는 변수도 통제</td>
+                            <td>정책 시행 전후 데이터 있을 때</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Causal Forest</strong></td>
+                            <td>AI로 개인별 효과</td>
+                            <td>이질적 효과 파악</td>
+                            <td>개인별 맞춤 정책 필요할 때</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section" id="applications">
+                <h2><span class="emoji">📊</span> 실제 활용 예시</h2>
+
+                <div class="methods-container">
+                    <div class="method-card">
+                        <h4>🏛️ 정부 정책 평가</h4>
+                        <ul>
+                            <li>기초연금 → 노인 소득 증가 효과</li>
+                            <li>재난지원금 → 소비 진작 효과</li>
+                            <li>취업훈련 → 고용 증가 효과</li>
+                            <li>보육료 지원 → 출산율 변화</li>
+                        </ul>
+                    </div>
+
+                    <div class="method-card">
+                        <h4>🎓 교육 정책</h4>
+                        <ul>
+                            <li>장학금 → 학업 성취 향상</li>
+                            <li>개인별 맞춤 지원 → 효과 극대화</li>
+                            <li>온라인 교육 → 학습 격차 해소</li>
+                            <li>방과후 프로그램 → 교육 불평등 완화</li>
+                        </ul>
+                    </div>
+
+                    <div class="method-card">
+                        <h4>💼 기업 정책</h4>
+                        <ul>
+                            <li>직원 교육 → 생산성 향상</li>
+                            <li>복지 혜택 → 직원 만족도</li>
+                            <li>재택근무 → 업무 효율성</li>
+                            <li>성과급 → 동기부여 효과</li>
+                        </ul>
+                    </div>
+
+                    <div class="method-card">
+                        <h4>🏥 의료 정책</h4>
+                        <ul>
+                            <li>건강보험 → 의료 접근성</li>
+                            <li>예방접종 → 감염병 확산 방지</li>
+                            <li>금연 정책 → 흡연율 감소</li>
+                            <li>의료급여 → 저소득층 건강 개선</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="skills">
+                <h2><span class="emoji">🎯</span> 2장에서 배우는 핵심 스킬</h2>
+
+                <div class="concept-cards">
+                    <div class="concept-card">
+                        <h4>📈 데이터 분석가 스킬</h4>
+                        <ol>
+                            <li><strong>편향 인식:</strong> 데이터에 숨어있는 편향 찾기</li>
+                            <li><strong>인과추론:</strong> 상관관계와 인과관계 구분</li>
+                            <li><strong>정책 평가:</strong> 정책의 진짜 효과 측정</li>
+                        </ol>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 90%;">중급 이상 필수 스킬</div>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>🤖 AI + 정책 결합</h4>
+                        <ol>
+                            <li><strong>Causal Forest:</strong> 머신러닝으로 개인별 효과 추정</li>
+                            <li><strong>자동화된 매칭:</strong> 최적의 비교군 찾기</li>
+                            <li><strong>실시간 정책 평가:</strong> 지속적 모니터링</li>
+                        </ol>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%;">최신 트렌드</div>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <h4>📊 실무 활용</h4>
+                        <ol>
+                            <li><strong>정책 설계:</strong> 누구에게 어떤 정책이 효과적?</li>
+                            <li><strong>예산 배분:</strong> 한정된 자원을 어디에 투자?</li>
+                            <li><strong>성과 측정:</strong> 정책이 정말 효과 있었나?</li>
+                        </ol>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%;">즉시 적용 가능</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="summary">
+                <h2><span class="emoji">✅</span> 2장 이해도 체크리스트</h2>
+
+                <div class="checklist">
+                    <ul>
+                        <li>선택편향이 뭔지 알고, 왜 문제인지 안다</li>
+                        <li>성향점수매칭(PSM)의 원리를 이해한다</li>
+                        <li>차분-차분(DID) 분석의 핵심 아이디어를 안다</li>
+                        <li>이질적 효과가 왜 중요한지 안다</li>
+                        <li>Causal Forest가 어떻게 AI와 인과추론을 결합하는지 안다</li>
+                        <li>실제 정책 평가에 어떻게 적용하는지 안다</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h3><span class="emoji">🚀</span> 다음 단계 - 실습해보기</h3>
+                    <ol>
+                        <li><code>01_data_generation.py</code> 실행 → 데이터 생성</li>
+                        <li><code>02_causal_forest_analysis.py</code> → 개인별 효과 확인</li>
+                        <li><code>03_did_analysis.py</code> → 코로나 지원금 효과 분석</li>
+                    </ol>
+                    <p><strong>실습 파일 위치:</strong> <code>c:\practice\chap\chapter02\code\</code></p>
+                </div>
+
+                <div class="goal-box">
+                    <strong>🎯 최종 목표:</strong> 인과추론 + 머신러닝으로 더 똑똑한 정책 분석이 가능해집니다! 🎯✨
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><span class="emoji">📅</span> 작성일: 2025년 10월 29일</p>
+            <p><span class="emoji">📊</span> 2강: 인과추론과 머신러닝 결합 완전 정리</p>
+            <p><span class="emoji">🧠</span> 고급 통계 기법으로 정책의 진짜 효과를 찾아보세요!</p>
+        </div>
+    </div>
+
+    <script>
+        // 부드러운 스크롤 효과
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 페이지 로드 시 애니메이션
+        window.addEventListener('load', function() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    section.style.opacity = '0';
+                    section.style.transform = 'translateY(30px)';
+                    section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                    
+                    setTimeout(() => {
+                        section.style.opacity = '1';
+                        section.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 150);
+            });
+        });
+
+        // 카드 호버 효과
+        document.querySelectorAll('.file-card, .concept-card, .method-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // 통계 카운터 애니메이션
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                let current = 0;
+                const increment = target / 30;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 50);
+            });
+        }
+
+        // 스크롤 시 카운터 애니메이션 실행
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        document.querySelector('.stats-grid') && observer.observe(document.querySelector('.stats-grid'));
+    </script>
+</body>
+</html>
