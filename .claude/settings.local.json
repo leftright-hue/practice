@@ -18,7 +18,10 @@
       "Bash(timeout 180 python 5-4-explainability.py)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(timeout 30 python:*)",
+      "Bash(/dev/null)",
+      "Bash(timeout 60 python:*)"
     ],
     "deny": [],
     "ask": []
