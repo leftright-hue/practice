@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 제12장: 복잡계 이론과 정책 시뮬레이션
 12.3 에이전트 기반 모델링(ABM): COVID-19 정책 확산 시뮬레이션
@@ -5,6 +6,8 @@
 사회적 거리두기 정책 채택이 네트워크를 통해 확산되는 과정을 모델링합니다.
 """
 
+import sys
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -12,9 +15,26 @@ from matplotlib import font_manager, rc
 from matplotlib.animation import FuncAnimation
 import random
 
+# Windows 콘솔 UTF-8 설정
+if sys.platform.startswith('win'):
+    os.system('chcp 65001 > nul')
+    sys.stdout.reconfigure(encoding='utf-8')
+
 # 한글 폰트 설정
-plt.rcParams['font.family'] = 'Malgun Gothic'
-plt.rcParams['axes.unicode_minus'] = False
+try:
+    # Windows
+    if sys.platform.startswith('win'):
+        plt.rcParams['font.family'] = 'Malgun Gothic'
+    # macOS
+    elif sys.platform == 'darwin':
+        plt.rcParams['font.family'] = 'AppleGothic'
+    # Linux
+    else:
+        plt.rcParams['font.family'] = 'DejaVu Sans'
+    plt.rcParams['axes.unicode_minus'] = False
+except:
+    plt.rcParams['font.family'] = 'DejaVu Sans'
+    print("Warning: 한글 폰트 설정에 실패했습니다. 영문으로 표시됩니다.")
 
 class PolicyAgent:
     """정책 채택 에이전트"""
